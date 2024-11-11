@@ -28,7 +28,7 @@ export const FormContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-export const BaseInput = styled.input`
+const BaseInput = styled.input`
   background: transparent;
   height: 4rem;
   border: 0;
