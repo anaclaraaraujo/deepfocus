@@ -6,15 +6,11 @@ import { Router } from "./routes/Router";
 
 export function App() {
   return (
-    <>
-      <ThemeProvider theme={defaultTheme}>
-        
-        <BrowserRouter>
+    <ThemeProvider theme={defaultTheme}>
+      <BrowserRouter>
         <Router />
-        </BrowserRouter>
-        
-        <GlobalStyle />
-      </ThemeProvider>
-    </>
+      </BrowserRouter>
+      <GlobalStyle />
+    </ThemeProvider>
   )
 }

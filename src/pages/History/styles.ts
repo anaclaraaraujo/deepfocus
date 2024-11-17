@@ -70,7 +70,9 @@ interface StatusProps {
   statusColor: keyof typeof STATUS_COLORS
 }
 
-export const Status = styled.span<StatusProps>`
+export const Status = styled.span.withConfig({
+  shouldForwardProp: (prop) => prop !== 'statusColor',
+}) <StatusProps>`
   display: flex;
   align-items: center;
   gap: 0.8rem;
