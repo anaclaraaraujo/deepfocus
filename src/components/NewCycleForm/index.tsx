@@ -4,8 +4,11 @@ import { useContext } from 'react';
 import { CyclesContext } from '../../pages/Home';
 
 export function NewCycleForm() {
-  const { activeCycle } = useContext(CyclesContext)
-  const { register } = useFormContext()
+  // Accessing the active cycle from the CyclesContext
+  const { activeCycle } = useContext(CyclesContext);
+
+  // Getting the register function from react-hook-form's context
+  const { register } = useFormContext();
 
   return (
     <FormContainer>
@@ -37,7 +40,7 @@ export function NewCycleForm() {
         {...register('minutesAmount', { valueAsNumber: true })}
       />
 
-      <span>minutos.</span>
+      <span>minutos.</span> 
     </FormContainer>
-  )
+  );
 }

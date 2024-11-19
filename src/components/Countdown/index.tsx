@@ -4,61 +4,70 @@ import { CyclesContext } from "../../pages/Home";
 import { CountdownContainer, Separator } from "./styles";
 
 export function Countdown() {
+  
+  // Accessing values and functions from CyclesContext
   const {
-    activeCycle,
-    activeCycleId,
-    markCurrentCycleAsFinished,
-    amountSecondsPassed,
-    setSecondsPassed,
-  } = useContext(CyclesContext)
+    activeCycle, // Currently active cycle, if any
+    activeCycleId, // ID of the active cycle
+    markCurrentCycleAsFinished, // Function to mark the active cycle as finished
+    amountSecondsPassed, // Number of seconds passed in the current cycle
+    setSecondsPassed, // Function to update the seconds passed
+  } = useContext(CyclesContext);
 
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+  // Calculate the total seconds for the active cycle or default to 0
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
 
   useEffect(() => {
-    let interval: number
+    let interval: number;
 
     if (activeCycle) {
+      // Start an interval to update the countdown every second
       interval = setInterval(() => {
         const secondsDifference = differenceInSeconds(
-          new Date(),
-          activeCycle.startDate,
-        )
+          new Date(), // Current time
+          activeCycle.startDate // Start time of the active cycle
+        );
 
         if (secondsDifference >= totalSeconds) {
-          markCurrentCycleAsFinished()
+          // If the cycle has completed, mark it as finished
+          markCurrentCycleAsFinished();
 
-          setSecondsPassed(totalSeconds)
-          clearInterval(interval)
+          setSecondsPassed(totalSeconds); // Set the passed time to total time
+          clearInterval(interval); // Clear the interval to stop updates
         } else {
-          setSecondsPassed(secondsDifference)
+          setSecondsPassed(secondsDifference); // Update passed time
         }
-      }, 1000)
+      }, 1000); // Execute every second
     }
 
     return () => {
-      clearInterval(interval)
-    }
+      clearInterval(interval); // Cleanup: clear the interval when component unmounts or dependencies change
+    };
   }, [
     activeCycle,
     totalSeconds,
     activeCycleId,
     setSecondsPassed,
     markCurrentCycleAsFinished,
-  ])
+  ]);
 
-  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
+  // Calculate the current remaining seconds in the active cycle
+  const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
 
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
+  // Convert the remaining seconds into minutes and seconds
+  const minutesAmount = Math.floor(currentSeconds / 60);
+  const secondsAmount = currentSeconds % 60;
 
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
+  // Format minutes and seconds to always show two digits
+  const minutes = String(minutesAmount).padStart(2, '0');
+  const seconds = String(secondsAmount).padStart(2, '0');
 
   useEffect(() => {
     if (activeCycle) {
-      document.title = `${minutes}:${seconds}`
+      // Update the document title with the remaining time
+      document.title = `${minutes}:${seconds}`;
     }
-  }, [minutes, seconds, activeCycle])
+  }, [minutes, seconds, activeCycle]);
 
   return (
     <CountdownContainer>
@@ -68,5 +77,5 @@ export function Countdown() {
       <span>{seconds[0]}</span>
       <span>{seconds[1]}</span>
     </CountdownContainer>
-  )
+  );
 }
