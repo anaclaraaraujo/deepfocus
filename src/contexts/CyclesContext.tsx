@@ -1,6 +1,7 @@
-import { createContext, ReactNode, useReducer, useState } from 'react';
+import { createContext, ReactNode, useEffect, useReducer, useState } from 'react';
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer';
 import { addNewCycleAction, interruptCurrentCycleAction, markCurrentCycleAsFinishedAction } from '../reducers/cycles/actions';
+import { differenceInSeconds } from 'date-fns';
 
 // Interface defining the data structure for creating a new cycle
 interface CreateCycleData {
@@ -31,19 +32,42 @@ interface CyclesContextProviderProps {
 // Context provider component for managing and sharing cycles state
 export function CyclesContextProvider({ children }: CyclesContextProviderProps) {
   // Reducer hook to manage the state of cycles
-  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
-    cycles: [],
-    activeCycleId: null,
-  });
-
-  // State hook to track the number of seconds passed for the current cycle
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
+  const [cyclesState, dispatch] = useReducer(
+    cyclesReducer, 
+    {
+      cycles: [],
+      activeCycleId: null,
+    },
+    (initialState) => {
+      const storedStateAsJSON = localStorage.getItem(
+        '@focus-deep:cycles-state-1.0.0',
+      )
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON)
+      }
+      return initialState
+    }
+  );
 
   // Destructure cycles and activeCycleId from the reducer state
   const { cycles, activeCycleId } = cyclesState;
 
   // Find the active cycle based on its ID
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  // State hook to track the number of seconds passed for the current cycle
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startDate));
+    }
+    
+    return 0;
+  })
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(cyclesState)
+    localStorage.setItem('@focus-deep:cycles-state-1.0.0', stateJSON)
+  }, [cyclesState])
 
   // Function to update the seconds passed for the current cycle
   function setSecondsPassed(seconds: number) {
