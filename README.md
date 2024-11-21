@@ -20,6 +20,7 @@
   <img alt="immer" src="https://img.shields.io/static/v1?label=immer&message=10.1.1&color=20232A&labelColor=88C76F">
 </p>
 
+<img src="./public/mockup.png">
 
 ## Bibliotecas
 
