@@ -1,3 +1,5 @@
+import { ActionTypes } from "./actions";
+
 // Interface representing the structure of a cycle
 export interface Cycle {
   id: string;
@@ -14,12 +16,6 @@ interface CyclesState {
   activeCycleId: string | null;
 }
 
-// Enum defining action types for the reducer
-export enum ActionTypes {
-  ADD_NEW_CYCLE = 'ADD_NEW_CYCLE',
-  INTERRUPT_CURRENT_CYCLE = 'INTERRUPT_CURRENT_CYCLE',
-  MARK_CURRENT_CYCLE_AS_FINISHED = 'MARK_CURRENT_CYCLE_AS_FINISHED',
-}
 
 // Reducer function to manage the state of cycles
 export function cyclesReducer(state: CyclesState, action: any) {
